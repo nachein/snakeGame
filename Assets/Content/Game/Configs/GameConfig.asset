@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab90420482f64be09549c90f41a26487, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  BoardWidth: 10
-  BoardHeight: 10
   NumberOfSnakes: 2
   StartingSnakeSize: 3
   UpdateIntervalInSeconds: 1
+  StartingMovementDirection: 2

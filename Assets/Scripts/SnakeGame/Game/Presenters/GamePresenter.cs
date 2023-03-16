@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SnakeGame.Game.Models;
+using SnakeGame.Game.Views;
 using SnakeGame.Snakes.Views;
 
 namespace SnakeGame.Game.Presenters
@@ -7,12 +8,14 @@ namespace SnakeGame.Game.Presenters
     public class GamePresenter
     {
         private readonly GameModel _gameModel;
+        private readonly GameView _gameView;
         private readonly SnakeViewFactory _snakeViewFactory;
         private readonly Dictionary<Snake, SnakeView> _snakeViewMap;
 
-        public GamePresenter(GameModel gameModel, SnakeViewFactory snakeViewFactory)
+        public GamePresenter(GameModel gameModel, GameView gameView, SnakeViewFactory snakeViewFactory)
         {
             _gameModel = gameModel;
+            _gameView = gameView;
             _snakeViewFactory = snakeViewFactory;
 
             _snakeViewMap = new Dictionary<Snake, SnakeView>();
@@ -23,6 +26,16 @@ namespace SnakeGame.Game.Presenters
             _gameModel.Setup();
             CreateSnakeViews();
             UpdateSnakePositions();
+            _gameModel.OnUpdateSnakePositions += UpdateSnakePositions;
+            _gameView.OnViewDestroyed += OnViewDestroyed;
+        }
+
+        private void OnViewDestroyed()
+        {
+            _gameModel.OnUpdateSnakePositions -= UpdateSnakePositions;
+            _gameView.OnViewDestroyed -= OnViewDestroyed;
+
+            _gameModel.Dispose();
         }
 
         private void CreateSnakeViews()

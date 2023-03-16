@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using SnakeGame.Snakes.Models;
 
 namespace SnakeGame.Game.Models
 {
     public class Snake
     {
         private readonly List<BoardPosition> _bodyPartPositions;
-        private readonly BoardPosition _movementDirection;
+        private readonly SnakeMovementDirection _movementDirection;
 
         private int _snakeSize;
 
-        public Snake(List<BoardPosition> startingPositions, BoardPosition startingMovementDirection)
+        public Snake(List<BoardPosition> startingPositions, SnakeMovementDirection startingMovementDirection)
         {
             _bodyPartPositions = startingPositions;
             _movementDirection = startingMovementDirection;
@@ -18,7 +19,7 @@ namespace SnakeGame.Game.Models
         }
 
         public List<BoardPosition> BodyPartPositions => _bodyPartPositions;
-        public BoardPosition MoveDirection => _movementDirection;
+        public SnakeMovementDirection MoveDirection => _movementDirection;
         public int Size => _snakeSize;
     }
 }

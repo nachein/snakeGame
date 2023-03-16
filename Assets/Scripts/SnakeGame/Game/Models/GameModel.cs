@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Timers;
 using SnakeGame.Board.Configs;
+using SnakeGame.Snakes.Models;
 
 namespace SnakeGame.Game.Models
 {
@@ -9,15 +10,16 @@ namespace SnakeGame.Game.Models
     {
         private readonly GameConfig _gameConfig;
         private readonly BoardConfig _boardConfig;
+        private readonly GameUpdateProvider _gameUpdateProvider;
 
         private List<Snake> _snakes = new List<Snake>();
         private int[,] _board;
-        private Timer _updateTimer;
 
-        public GameModel(GameConfig gameConfig, BoardConfig boardConfig)
+        public GameModel(GameConfig gameConfig, BoardConfig boardConfig, GameUpdateProvider gameUpdateProvider)
         {
             _gameConfig = gameConfig;
             _boardConfig = boardConfig;
+            _gameUpdateProvider = gameUpdateProvider;
         }
 
         public Action OnUpdateSnakePositions = delegate { };
@@ -34,8 +36,10 @@ namespace SnakeGame.Game.Models
             var startingMovementDirection = _gameConfig.StartingMovementDirection;
 
             _board = new int[boardWidth, boardHeight];
-            _updateTimer = new Timer(updateIntervalInSeconds);
-            _updateTimer.Elapsed += (sender, e) => GameUpdate();
+
+            _gameUpdateProvider.Stop();
+            _gameUpdateProvider.TickIntervalInSeconds = updateIntervalInSeconds;
+            _gameUpdateProvider.OnTick += SnakeMovementStep;
 
             var allSnakeStartingPositions = CalculateStartingPositions(numberOfSnakes, startingSnakeSize, boardWidth, boardHeight);
             for (var snakeIndex = 0; snakeIndex < numberOfSnakes; snakeIndex++)
@@ -51,10 +55,16 @@ namespace SnakeGame.Game.Models
 
         public void StartGame()
         {
-            _updateTimer.Start();
+            _gameUpdateProvider.Run();
         }
 
-        private void GameUpdate()
+        public void Dispose()
+        {
+            _gameUpdateProvider.Stop();
+            _gameUpdateProvider.OnTick -= SnakeMovementStep;
+        }
+
+        private void SnakeMovementStep()
         {
             MoveSnakes();
             // CheckForDeaths();
@@ -77,7 +87,7 @@ namespace SnakeGame.Game.Models
                 }
 
                 var currentHeadPosition = snake.BodyPartPositions[0];
-                var nextHeadPosition = currentHeadPosition + snake.MoveDirection;
+                var nextHeadPosition = currentHeadPosition + snake.MoveDirection.ToBoardPosition();
 
                 _board[currentHeadPosition.X, currentHeadPosition.Y]--;
                 _board[nextHeadPosition.X, nextHeadPosition.Y]++;

@@ -5,6 +5,7 @@ using SnakeGame.Camera.Presenters;
 using SnakeGame.Camera.Views;
 using SnakeGame.Game.Models;
 using SnakeGame.Game.Presenters;
+using SnakeGame.Game.Views;
 using SnakeGame.Snakes.Views;
 using UnityEngine;
 
@@ -23,6 +24,8 @@ namespace SnakeGame.Scenes
         [Header("Scene References")]
         [SerializeField] private CameraView _cameraView;
         [SerializeField] private BoardView _boardView;
+        [SerializeField] private GameView _gameView;
+        [SerializeField] private UnityGameUpdateProvider _gameUpdateProvider;
 
         private void Awake()
         {
@@ -33,11 +36,11 @@ namespace SnakeGame.Scenes
             boardPresenter.Initialize();
 
             var snakeViewFactory = new SnakeViewFactory(_snakeViewPrefab, _snakeBodyPartViewPrefab);
-            var gameModel = new GameModel(_gameConfig, _boardConfig);
-            var gamePresenter = new GamePresenter(gameModel, snakeViewFactory);
+            var gameModel = new GameModel(_gameConfig, _boardConfig, _gameUpdateProvider);
+            var gamePresenter = new GamePresenter(gameModel, _gameView, snakeViewFactory);
             gamePresenter.Initialize();
 
-            // gameModel.StartGame();
+            gameModel.StartGame();
         }
     }
 }

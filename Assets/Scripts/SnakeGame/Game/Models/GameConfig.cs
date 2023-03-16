@@ -1,3 +1,4 @@
+using SnakeGame.Snakes.Models;
 using UnityEngine;
 
 namespace SnakeGame.Game.Models
@@ -8,6 +9,6 @@ namespace SnakeGame.Game.Models
         public int NumberOfSnakes;
         public int StartingSnakeSize;
         public float UpdateIntervalInSeconds;
-        public BoardPosition StartingMovementDirection;
+        public SnakeMovementDirection StartingMovementDirection = SnakeMovementDirection.DOWN;
     }
 }
