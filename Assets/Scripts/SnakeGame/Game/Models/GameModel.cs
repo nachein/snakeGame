@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Timers;
+using SnakeGame.Board.Configs;
 
 namespace SnakeGame.Game.Models
 {
     public class GameModel
     {
         private readonly GameConfig _gameConfig;
+        private readonly BoardConfig _boardConfig;
 
         private List<Snake> _snakes = new List<Snake>();
         private int[,] _board;
         private Timer _updateTimer;
 
-        public GameModel(GameConfig gameConfig)
+        public GameModel(GameConfig gameConfig, BoardConfig boardConfig)
         {
             _gameConfig = gameConfig;
+            _boardConfig = boardConfig;
         }
 
         public Action OnUpdateSnakePositions = delegate { };
@@ -23,8 +26,8 @@ namespace SnakeGame.Game.Models
 
         public void Setup()
         {
-            var boardWidth = _gameConfig.BoardWidth;
-            var boardHeight = _gameConfig.BoardHeight;
+            var boardWidth = _boardConfig.BoardWidth;
+            var boardHeight = _boardConfig.BoardHeight;
             var numberOfSnakes = _gameConfig.NumberOfSnakes;
             var startingSnakeSize = _gameConfig.StartingSnakeSize;
             var updateIntervalInSeconds = _gameConfig.UpdateIntervalInSeconds;
@@ -91,7 +94,7 @@ namespace SnakeGame.Game.Models
             var allStartingPositions = new List<List<BoardPosition>>();
 
             var widthPerSnake = boardWidth / numberOfSnakes;
-            var y = startingSnakeSize + 1;
+            var y = startingSnakeSize - 1;
             var heightAvailableToFitBody = Math.Max(0, boardHeight - y - startingSnakeSize);
             for (var snakeIndex = 0; snakeIndex < numberOfSnakes; snakeIndex++)
             {

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 430826373}
   - component: {fileID: 430826372}
   - component: {fileID: 430826371}
+  - component: {fileID: 430826374}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -176,7 +177,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.61
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -205,8 +206,21 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &430826374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 430826370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6518b942e9f8403da256bbc49a55636d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 430826372}
 --- !u!1 &1178762736
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +313,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1513261044
 GameObject:
@@ -331,7 +345,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1513261046
 MonoBehaviour:
@@ -346,8 +360,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameConfig: {fileID: 11400000, guid: 550e7c07aad3a4e629d520b13a2be49d, type: 2}
+  _boardConfig: {fileID: 11400000, guid: aeffe7e5da205442ebdf9d74a41c12b2, type: 2}
   _snakeViewPrefab: {fileID: 871243816756967699, guid: b9a2c7c1d78ff4fcfa1fc91289d7da32, type: 3}
   _snakeBodyPartViewPrefab: {fileID: 8672997669759115975, guid: 9ee5dae22d0f74a6caa769e6d5419933, type: 3}
+  _cameraView: {fileID: 430826374}
+  _boardView: {fileID: 1987039042}
 --- !u!1 &1987039037
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +377,7 @@ GameObject:
   - component: {fileID: 1987039040}
   - component: {fileID: 1987039039}
   - component: {fileID: 1987039038}
+  - component: {fileID: 1987039042}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -446,3 +464,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1987039042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987039037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0357f81c16164f34826ff762f3920830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boardTransform: {fileID: 1987039041}
