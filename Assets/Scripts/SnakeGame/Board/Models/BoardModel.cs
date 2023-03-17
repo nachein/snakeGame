@@ -9,9 +9,12 @@ namespace SnakeGame.Board.Models
     {
         private readonly BoardConfig _boardConfig;
 
+        private int[,] _board;
+
         public BoardModel(BoardConfig boardConfig)
         {
             _boardConfig = boardConfig;
+            _board = new int[_boardConfig.BoardWidth, _boardConfig.BoardHeight];
         }
         
         public List<List<BoardPosition>> CalculateStartingPositions(int numberOfSnakes, int startingSnakeSize)
@@ -37,6 +40,27 @@ namespace SnakeGame.Board.Models
             }
 
             return allStartingPositions;
+        }
+
+        public void FreeSlot(BoardPosition boardPosition)
+        {
+            _board[boardPosition.X, boardPosition.Y]++;
+        }
+
+        public void OccupySlot(BoardPosition boardPosition)
+        {
+            _board[boardPosition.X, boardPosition.Y]++;
+        }
+
+        public bool IsSlotOccupied(BoardPosition boardPosition)
+        {
+            return _board[boardPosition.X, boardPosition.Y] > 0;
+        }
+
+        public bool IsOutOfBoundaries(BoardPosition boardPosition)
+        {
+            return boardPosition.X < 0 || boardPosition.X >= _boardConfig.BoardWidth || boardPosition.Y < 0 ||
+                   boardPosition.Y >= _boardConfig.BoardHeight;
         }
     }
 }

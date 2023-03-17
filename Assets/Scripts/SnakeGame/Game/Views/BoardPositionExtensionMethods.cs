@@ -9,10 +9,5 @@ namespace SnakeGame.Game.Views
         {
             return new Vector3(boardPosition.X, boardPosition.Y, 0);
         }
-
-        public static bool IsOutOfBoundaries(this BoardPosition position, int boardWidth, int boardHeight)
-        {
-            return position.X < 0 || position.X >= boardWidth || position.Y < 0 || position.Y >= boardHeight;
-        }
     }
 }

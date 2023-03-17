@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SnakeGame.Board.Configs;
-using SnakeGame.Game.Views;
+using SnakeGame.Board.Services;
 using SnakeGame.Snakes.Models;
 
 namespace SnakeGame.Game.Models
@@ -9,19 +8,17 @@ namespace SnakeGame.Game.Models
     public class GameModel
     {
         private readonly GameConfig _gameConfig;
-        private readonly BoardConfig _boardConfig;
         private readonly GameUpdateProvider _gameUpdateProvider;
+        private readonly BoardService _boardService;
 
         private List<Snake> _snakes = new List<Snake>();
-        private int[,] _board;
 
-        public GameModel(GameConfig gameConfig, BoardConfig boardConfig, GameUpdateProvider gameUpdateProvider)
+        public GameModel(GameConfig gameConfig, GameUpdateProvider gameUpdateProvider,
+            BoardService boardService)
         {
             _gameConfig = gameConfig;
-            _boardConfig = boardConfig;
             _gameUpdateProvider = gameUpdateProvider;
-
-            _board = new int[_boardConfig.BoardWidth, _boardConfig.BoardHeight];
+            _boardService = boardService;
 
             _gameUpdateProvider.Stop();
             _gameUpdateProvider.OnTick += SnakeMovementStep;
@@ -50,7 +47,7 @@ namespace SnakeGame.Game.Models
 
             foreach (var startingPosition in snake.BodyPartPositions)
             {
-                _board[startingPosition.X, startingPosition.Y]++;
+                _boardService.OccupySlot(startingPosition);
             }
         }
 
@@ -68,8 +65,7 @@ namespace SnakeGame.Game.Models
                 var currentHeadPosition = snake.BodyPartPositions[0];
                 var nextHeadPosition = currentHeadPosition + snake.CurrentMovementDirection().ToBoardPosition();
 
-                if (nextHeadPosition.IsOutOfBoundaries(_boardConfig.BoardWidth, _boardConfig.BoardHeight) ||
-                    _board[nextHeadPosition.X, nextHeadPosition.Y] > 0)
+                if (_boardService.IsOutOfBoundaries(nextHeadPosition) || _boardService.IsSlotOccupied(nextHeadPosition))
                 {
                     snake.IsAlive = false;
                     return;
@@ -80,14 +76,14 @@ namespace SnakeGame.Game.Models
                     var currentBodyPartPosition = snake.BodyPartPositions[bodyPartIndex];
                     var nextBodyPartPosition = snake.BodyPartPositions[bodyPartIndex-1];
 
-                    _board[currentBodyPartPosition.X, currentBodyPartPosition.Y]--;
-                    _board[nextBodyPartPosition.X, nextBodyPartPosition.Y]++;
+                    _boardService.FreeSlot(currentBodyPartPosition);
+                    _boardService.OccupySlot(nextBodyPartPosition);
 
                     snake.BodyPartPositions[bodyPartIndex] = snake.BodyPartPositions[bodyPartIndex - 1];
                 }
 
-                _board[currentHeadPosition.X, currentHeadPosition.Y]--;
-                _board[nextHeadPosition.X, nextHeadPosition.Y]++;
+                _boardService.FreeSlot(currentHeadPosition);
+                _boardService.OccupySlot(nextHeadPosition);
 
                 snake.BodyPartPositions[0] = nextHeadPosition;
             }
@@ -104,41 +100,13 @@ namespace SnakeGame.Game.Models
                     for (var bodyPartIndex = 0; bodyPartIndex < snake.Size; bodyPartIndex++)
                     {
                         var bodyPartPosition = snake.BodyPartPositions[bodyPartIndex];
-                        _board[bodyPartPosition.X, bodyPartPosition.Y]--;
+                        _boardService.FreeSlot(bodyPartPosition);
                     }
 
                     OnRemoveSnake(snake);
                     _snakes.RemoveAt(snakeIndex);
                 }
             }
-        }
-
-        /// <summary>
-        /// Snakes are positioned horizontally, leaving room on top and below, adding a random vertical offset
-        /// </summary>
-        private List<List<BoardPosition>> CalculateStartingPositions(int numberOfSnakes, int startingSnakeSize, int boardWidth, int boardHeight)
-        {
-            var allStartingPositions = new List<List<BoardPosition>>();
-
-            var widthPerSnake = boardWidth / numberOfSnakes;
-            var y = startingSnakeSize - 1;
-            var heightAvailableToFitBody = Math.Max(0, boardHeight - y - startingSnakeSize);
-            for (var snakeIndex = 0; snakeIndex < numberOfSnakes; snakeIndex++)
-            {
-                var startingPositions = new List<BoardPosition>();
-
-                var x = widthPerSnake / 2 + snakeIndex * widthPerSnake;
-                var randomYOffset = UnityEngine.Random.Range(0, heightAvailableToFitBody);
-
-                for (var bodyPartIndex = 0; bodyPartIndex < startingSnakeSize; bodyPartIndex++)
-                {
-                    startingPositions.Add(new BoardPosition(x, y + randomYOffset + bodyPartIndex));
-                }
-
-                allStartingPositions.Add(startingPositions);
-            }
-
-            return allStartingPositions;
         }
     }
 }

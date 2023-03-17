@@ -17,5 +17,25 @@ namespace SnakeGame.Board.Services
         {
             return _boardModel.CalculateStartingPositions(numberOfSnakes, startingSnakeSize);
         }
+
+        public void OccupySlot(BoardPosition boardPosition)
+        {
+            _boardModel.OccupySlot(boardPosition);
+        }
+
+        public void FreeSlot(BoardPosition boardPosition)
+        {
+            _boardModel.FreeSlot(boardPosition);
+        }
+
+        public bool IsSlotOccupied(BoardPosition boardPosition)
+        {
+            return _boardModel.IsSlotOccupied(boardPosition);
+        }
+        
+        public bool IsOutOfBoundaries(BoardPosition boardPosition)
+        {
+            return _boardModel.IsOutOfBoundaries(boardPosition);
+        }
     }
 }

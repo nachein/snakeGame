@@ -48,7 +48,7 @@ namespace SnakeGame.Scenes
             var snakeViewFactory = new SnakeViewFactory(_snakeViewPrefab, _snakeBodyPartViewPrefab);
 
             _gameUpdateProvider.TickIntervalInSeconds = _gameConfig.UpdateIntervalInSeconds;
-            var gameModel = new GameModel(_gameConfig, _boardConfig, _gameUpdateProvider);
+            var gameModel = new GameModel(_gameConfig, _gameUpdateProvider, boardService);
             var gamePresenter = new GamePresenter(gameModel, _gameView, snakeViewFactory, boardService, _defaultInputControlMaps);
             gamePresenter.Initialize(Math.Max(1, _numberOfPlayers));
 
