@@ -68,7 +68,8 @@ namespace SnakeGame.Game.Models
                 var currentHeadPosition = snake.BodyPartPositions[0];
                 var nextHeadPosition = currentHeadPosition + snake.CurrentMovementDirection().ToBoardPosition();
 
-                if (nextHeadPosition.IsOutOfBoundaries(_boardConfig.BoardWidth, _boardConfig.BoardHeight))
+                if (nextHeadPosition.IsOutOfBoundaries(_boardConfig.BoardWidth, _boardConfig.BoardHeight) ||
+                    _board[nextHeadPosition.X, nextHeadPosition.Y] > 0)
                 {
                     snake.IsAlive = false;
                     return;
