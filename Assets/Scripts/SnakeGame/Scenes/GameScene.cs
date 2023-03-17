@@ -9,9 +9,9 @@ using SnakeGame.Camera.Views;
 using SnakeGame.Game.Models;
 using SnakeGame.Game.Presenters;
 using SnakeGame.Game.Views;
+using SnakeGame.InputControls.Config;
 using SnakeGame.Snakes.Views;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace SnakeGame.Scenes
 {
@@ -22,6 +22,7 @@ namespace SnakeGame.Scenes
         [Header("Configs")]
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private BoardConfig _boardConfig;
+        [SerializeField] private DefaultInputControlMaps _defaultInputControlMaps;
 
         [Header("Prefabs")]
         [SerializeField] private SnakeView _snakeViewPrefab;
@@ -32,9 +33,6 @@ namespace SnakeGame.Scenes
         [SerializeField] private BoardView _boardView;
         [SerializeField] private GameView _gameView;
         [SerializeField] private UnityGameUpdateProvider _gameUpdateProvider;
-
-        [Header("Asset References")]
-        [SerializeField] private InputActionAsset _inputActionAsset;
 
         private void Awake()
         {
@@ -51,7 +49,7 @@ namespace SnakeGame.Scenes
 
             _gameUpdateProvider.TickIntervalInSeconds = _gameConfig.UpdateIntervalInSeconds;
             var gameModel = new GameModel(_gameConfig, _boardConfig, _gameUpdateProvider);
-            var gamePresenter = new GamePresenter(gameModel, _gameView, snakeViewFactory, boardService, _inputActionAsset);
+            var gamePresenter = new GamePresenter(gameModel, _gameView, snakeViewFactory, boardService, _defaultInputControlMaps);
             gamePresenter.Initialize(Math.Max(1, _numberOfPlayers));
 
             gameModel.StartGame();

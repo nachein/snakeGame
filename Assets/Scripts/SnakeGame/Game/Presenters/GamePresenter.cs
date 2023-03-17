@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using SnakeGame.Board.Services;
 using SnakeGame.Game.Models;
 using SnakeGame.Game.Views;
+using SnakeGame.InputControls.Config;
 using SnakeGame.Snakes.Models;
 using SnakeGame.Snakes.Views;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace SnakeGame.Game.Presenters
@@ -14,17 +16,17 @@ namespace SnakeGame.Game.Presenters
         private readonly GameView _gameView;
         private readonly SnakeViewFactory _snakeViewFactory;
         private readonly BoardService _boardService;
-        private readonly InputActionAsset _inputActionAsset;
+        private readonly DefaultInputControlMaps _defaultInputControlMaps;
         private readonly Dictionary<Snake, SnakeView> _snakeViewMap;
 
         public GamePresenter(GameModel gameModel, GameView gameView, SnakeViewFactory snakeViewFactory,
-            BoardService boardService, InputActionAsset inputActionAsset)
+            BoardService boardService, DefaultInputControlMaps defaultInputControlMaps)
         {
             _gameModel = gameModel;
             _gameView = gameView;
             _snakeViewFactory = snakeViewFactory;
             _boardService = boardService;
-            _inputActionAsset = inputActionAsset;
+            _defaultInputControlMaps = defaultInputControlMaps;
 
             _snakeViewMap = new Dictionary<Snake, SnakeView>();
         }
@@ -34,7 +36,11 @@ namespace SnakeGame.Game.Presenters
             var snakeSetups = new List<SnakeSetup>();
             for (var playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++)
             {
-                snakeSetups.Add(new SnakeSetup());
+                if (playerIndex >= _defaultInputControlMaps.InputControlMaps.Count)
+                    continue;
+
+                var inputControlMap = _defaultInputControlMaps.InputControlMaps[playerIndex];
+                snakeSetups.Add(new SnakeSetup { InputControlMap = inputControlMap});
             }
 
             SetupSnakes(snakeSetups);
@@ -55,7 +61,7 @@ namespace SnakeGame.Game.Presenters
             {
                 var snakeSetup = snakeSetups[snakeIndex];
                 var snakeView = CreateSnakeView(snakeSetup);
-                var movementInput = CreateMovementInput(snakeView, snakeSetup);
+                var movementInput = CreateMovementInput(snakeView, snakeSetup, snakeIndex);
                 var startingPositions = allSnakeStartingPositions[snakeIndex];
                 var snake = new Snake(startingPositions, _gameModel.StartingMovementDirection, movementInput);
 
@@ -76,15 +82,30 @@ namespace SnakeGame.Game.Presenters
             return snakeView;
         }
 
-        private MovementInput CreateMovementInput(SnakeView snakeView, SnakeSetup snakeSetup)
+        private MovementInput CreateMovementInput(SnakeView snakeView, SnakeSetup snakeSetup, int playerIndex)
         {
+            var actionMapName = $"MovementActionMap{playerIndex}";
+
             var playerInput = snakeView.gameObject.AddComponent<PlayerInput>();
-            playerInput.actions = _inputActionAsset;
-            playerInput.SwitchCurrentActionMap(_inputActionAsset.actionMaps[0].name);
 
-            var playerInputView = snakeView.gameObject.AddComponent<PlayerInputView>();
+            var inputActionAsset = ScriptableObject.CreateInstance<InputActionAsset>();
+            inputActionAsset.name = actionMapName;
 
-            return new PlayerMovementInput(playerInputView);
+            var movementMap = new InputActionMap(actionMapName);
+            inputActionAsset.AddActionMap(movementMap);
+
+            var movementAction = movementMap.AddAction("movement");
+            var inputControlMap = snakeSetup.InputControlMap;
+            movementAction.AddCompositeBinding("Dpad")
+                .With("Up", $"<{inputControlMap.Device}>/{inputControlMap.UpKeyName}")
+                .With("Down", $"<{inputControlMap.Device}>/{inputControlMap.DownKeyName}")
+                .With("Left", $"<{inputControlMap.Device}>/{inputControlMap.LeftKeyName}")
+                .With("Right", $"<{inputControlMap.Device}>/{inputControlMap.RightKeyName}");
+
+            playerInput.actions = inputActionAsset;
+            playerInput.SwitchCurrentActionMap(inputActionAsset.name);
+
+            return new PlayerMovementInput(movementAction);
         }
 
         private void OnViewDestroyed()
