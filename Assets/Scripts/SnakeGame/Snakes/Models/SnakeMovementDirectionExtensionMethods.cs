@@ -21,5 +21,11 @@ namespace SnakeGame.Snakes.Models
             UnityEngine.Debug.LogWarning("Unsupported movement direction. Defaulting to Down direction");
             return new BoardPosition(-1, 0);
         }
+
+        public static bool AreOppositeDirections(this SnakeMovementDirection a, SnakeMovementDirection b)
+        {
+            var sum = a.ToBoardPosition() + b.ToBoardPosition();
+            return sum.X == 0 && sum.Y == 0;
+        }
     }
 }

@@ -245,7 +245,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430826370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -0.5, y: -0.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2680516d3159640458b04ac24657b718, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _numberOfPlayers: 2
   _gameConfig: {fileID: 11400000, guid: 550e7c07aad3a4e629d520b13a2be49d, type: 2}
   _boardConfig: {fileID: 11400000, guid: aeffe7e5da205442ebdf9d74a41c12b2, type: 2}
   _snakeViewPrefab: {fileID: 871243816756967699, guid: b9a2c7c1d78ff4fcfa1fc91289d7da32, type: 3}
@@ -361,6 +362,7 @@ MonoBehaviour:
   _boardView: {fileID: 1987039042}
   _gameView: {fileID: 328080915}
   _gameUpdateProvider: {fileID: 1298904620}
+  _inputActionAsset: {fileID: -944628639613478452, guid: 7909a8d44a6584e3588f78b409144777, type: 3}
 --- !u!1 &1987039037
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,7 +455,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987039037}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: -0.5, y: -0.5, z: 1}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

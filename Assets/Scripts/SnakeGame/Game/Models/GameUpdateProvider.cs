@@ -7,6 +7,5 @@ namespace SnakeGame.Game.Models
         event Action OnTick;
         void Run();
         void Stop();
-        float TickIntervalInSeconds { set; }
     }
 }

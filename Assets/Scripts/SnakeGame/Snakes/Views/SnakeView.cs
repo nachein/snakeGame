@@ -10,6 +10,7 @@ namespace SnakeGame.Snakes.Views
         [SerializeField] private Transform _snakePartContainer;
 
         private List<SnakeBodyPartView> _bodyParts = new List<SnakeBodyPartView>();
+
         public void AddBodyPart(SnakeBodyPartView bodyPartView)
         {
             _bodyParts.Add(bodyPartView);
@@ -19,6 +20,11 @@ namespace SnakeGame.Snakes.Views
         public void SetBodyPartPosition(int bodyPartIndex, BoardPosition bodyPartPosition)
         {
             _bodyParts[bodyPartIndex].transform.position = bodyPartPosition.ToVector3();
+        }
+
+        public void Kill()
+        {
+            Destroy(gameObject);
         }
     }
 }
