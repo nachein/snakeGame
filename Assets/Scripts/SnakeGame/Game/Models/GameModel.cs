@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SnakeGame.Apples.Services;
 using SnakeGame.Board.Services;
 using SnakeGame.Snakes.Models;
 
@@ -10,28 +11,33 @@ namespace SnakeGame.Game.Models
         private readonly GameConfig _gameConfig;
         private readonly GameUpdateProvider _gameUpdateProvider;
         private readonly BoardService _boardService;
+        private readonly AppleService _appleService;
 
         private List<Snake> _snakes = new List<Snake>();
 
         public GameModel(GameConfig gameConfig, GameUpdateProvider gameUpdateProvider,
-            BoardService boardService)
+            BoardService boardService, AppleService appleService)
         {
             _gameConfig = gameConfig;
             _gameUpdateProvider = gameUpdateProvider;
             _boardService = boardService;
+            _appleService = appleService;
 
             _gameUpdateProvider.Stop();
             _gameUpdateProvider.OnTick += SnakeMovementStep;
         }
 
-        public Action OnUpdateSnakePositions = delegate { };
-        public Action<Snake> OnRemoveSnake = delegate { };
+        public Action OnUpdateSnakePositions = delegate {};
+        public Action<Snake> OnRemoveSnake = delegate {};
+        public Action<Snake> OnSnakeEatApple = delegate {};
+
         public List<Snake> Snakes => _snakes;
         public int StartingSnakeSize => _gameConfig.StartingSnakeSize;
         public SnakeMovementDirection StartingMovementDirection => _gameConfig.StartingMovementDirection;
 
         public void StartGame()
         {
+            _appleService.SpawnNewAppleAsync();
             _gameUpdateProvider.Run();
         }
 
@@ -60,8 +66,10 @@ namespace SnakeGame.Game.Models
 
         private void MoveSnakes()
         {
+            var appleWasEaten = false;
             foreach (var snake in _snakes)
             {
+                var shouldSnakeGrow = false;
                 var currentHeadPosition = snake.BodyPartPositions[0];
                 var nextHeadPosition = currentHeadPosition + snake.CurrentMovementDirection().ToBoardPosition();
 
@@ -71,6 +79,13 @@ namespace SnakeGame.Game.Models
                     return;
                 }
 
+                if (_appleService.ApplePosition != null && nextHeadPosition.Equals(_appleService.ApplePosition) && !appleWasEaten)
+                {
+                    appleWasEaten = true;
+                    shouldSnakeGrow = true;
+                }
+
+                var lastBodyPartPositionBeforeMove = snake.BodyPartPositions[snake.BodyPartPositions.Count-1];
                 for (var bodyPartIndex = snake.BodyPartPositions.Count - 1; bodyPartIndex > 0; bodyPartIndex--)
                 {
                     var currentBodyPartPosition = snake.BodyPartPositions[bodyPartIndex];
@@ -86,7 +101,17 @@ namespace SnakeGame.Game.Models
                 _boardService.OccupySlot(nextHeadPosition);
 
                 snake.BodyPartPositions[0] = nextHeadPosition;
+
+                if (shouldSnakeGrow)
+                {
+                    _boardService.OccupySlot(lastBodyPartPositionBeforeMove);
+                    OnSnakeEatApple(snake);
+                    snake.AddBodyPart(lastBodyPartPositionBeforeMove);
+                }
             }
+
+            if (appleWasEaten)
+                _appleService.SpawnNewAppleAsync();
         }
 
         private void CheckForDeaths()

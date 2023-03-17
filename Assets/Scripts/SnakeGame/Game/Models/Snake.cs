@@ -44,5 +44,11 @@ namespace SnakeGame.Game.Models
             _currentMovementDirection = _nextMovementDirection;
             return _currentMovementDirection;
         }
+
+        public void AddBodyPart(BoardPosition bodyPartPosition)
+        {
+            _bodyPartPositions.Add(bodyPartPosition);
+            _snakeSize++;
+        }
     }
 }

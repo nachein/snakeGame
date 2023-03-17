@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SnakeGame.Board.Configs;
 using SnakeGame.Game.Models;
 
@@ -44,7 +45,7 @@ namespace SnakeGame.Board.Models
 
         public void FreeSlot(BoardPosition boardPosition)
         {
-            _board[boardPosition.X, boardPosition.Y]++;
+            _board[boardPosition.X, boardPosition.Y]--;
         }
 
         public void OccupySlot(BoardPosition boardPosition)
@@ -61,6 +62,22 @@ namespace SnakeGame.Board.Models
         {
             return boardPosition.X < 0 || boardPosition.X >= _boardConfig.BoardWidth || boardPosition.Y < 0 ||
                    boardPosition.Y >= _boardConfig.BoardHeight;
+        }
+
+        public async Task<BoardPosition> RandomEmptyPositionAsync()
+        {
+            int randomX;
+            int randomY;
+
+            do
+            {
+                await Task.Yield();
+                randomX = UnityEngine.Random.Range(0, _boardConfig.BoardWidth - 1);
+                randomY = UnityEngine.Random.Range(0, _boardConfig.BoardHeight - 1);
+            }
+            while (IsSlotOccupied(new BoardPosition(randomX, randomY)));
+
+            return new BoardPosition(randomX, randomY);
         }
     }
 }

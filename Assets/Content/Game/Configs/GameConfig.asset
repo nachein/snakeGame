@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab90420482f64be09549c90f41a26487, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  NumberOfSnakes: 2
   StartingSnakeSize: 3
-  UpdateIntervalInSeconds: 1
+  UpdateIntervalInSeconds: 0.5
   StartingMovementDirection: 2

@@ -245,7 +245,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430826370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.5, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -359,6 +359,7 @@ MonoBehaviour:
   _defaultInputControlMaps: {fileID: 11400000, guid: 6ed3747f15bd548439c9e39062a5071c, type: 2}
   _snakeViewPrefab: {fileID: 871243816756967699, guid: b9a2c7c1d78ff4fcfa1fc91289d7da32, type: 3}
   _snakeBodyPartViewPrefab: {fileID: 8672997669759115975, guid: 9ee5dae22d0f74a6caa769e6d5419933, type: 3}
+  _appleViewPrefab: {fileID: 3128963009415563372, guid: d99e5c48887b74ca4adbfcc5a7d9786f, type: 3}
   _cameraView: {fileID: 430826374}
   _boardView: {fileID: 1987039042}
   _gameView: {fileID: 328080915}
@@ -455,7 +456,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987039037}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SnakeGame.Board.Models;
 using SnakeGame.Game.Models;
 
@@ -36,6 +37,11 @@ namespace SnakeGame.Board.Services
         public bool IsOutOfBoundaries(BoardPosition boardPosition)
         {
             return _boardModel.IsOutOfBoundaries(boardPosition);
+        }
+
+        public async Task<BoardPosition> RandomEmptyPositionAsync()
+        {
+            return await _boardModel.RandomEmptyPositionAsync();
         }
     }
 }

@@ -15,5 +15,16 @@ namespace SnakeGame.Game.Models
         {
             return new BoardPosition(a.X + b.X, a.Y + b.Y);
         }
+
+        public override bool Equals(object otherObject)
+        {
+            if (!(otherObject is BoardPosition))
+            {
+                return false;
+            }
+
+            var otherBoardPosition = (BoardPosition) otherObject;
+            return X == otherBoardPosition.X && Y == otherBoardPosition.Y;
+        }
     }
 }

@@ -1,4 +1,8 @@
 using System;
+using SnakeGame.Apples.Models;
+using SnakeGame.Apples.Presenters;
+using SnakeGame.Apples.Services;
+using SnakeGame.Apples.Views;
 using SnakeGame.Board.Configs;
 using SnakeGame.Board.Models;
 using SnakeGame.Board.Presenters;
@@ -27,6 +31,7 @@ namespace SnakeGame.Scenes
         [Header("Prefabs")]
         [SerializeField] private SnakeView _snakeViewPrefab;
         [SerializeField] private SnakeBodyPartView _snakeBodyPartViewPrefab;
+        [SerializeField] private AppleView _appleViewPrefab;
 
         [Header("Scene References")]
         [SerializeField] private CameraView _cameraView;
@@ -45,10 +50,15 @@ namespace SnakeGame.Scenes
             var boardPresenter = new BoardPresenter(_boardView, _boardConfig);
             boardPresenter.Initialize();
 
+            var appleModel = new AppleModel(boardService);
+            var appleService = new AppleService(appleModel);
+            var applePresenter = new ApplePresenter(_appleViewPrefab, appleModel);
+            applePresenter.Initialize();
+
             var snakeViewFactory = new SnakeViewFactory(_snakeViewPrefab, _snakeBodyPartViewPrefab);
 
             _gameUpdateProvider.TickIntervalInSeconds = _gameConfig.UpdateIntervalInSeconds;
-            var gameModel = new GameModel(_gameConfig, _gameUpdateProvider, boardService);
+            var gameModel = new GameModel(_gameConfig, _gameUpdateProvider, boardService, appleService);
             var gamePresenter = new GamePresenter(gameModel, _gameView, snakeViewFactory, boardService, _defaultInputControlMaps);
             gamePresenter.Initialize(Math.Max(1, _numberOfPlayers));
 

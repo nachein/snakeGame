@@ -48,7 +48,16 @@ namespace SnakeGame.Game.Presenters
 
             _gameModel.OnUpdateSnakePositions += UpdateAllSnakePositions;
             _gameModel.OnRemoveSnake += RemoveSnake;
+            _gameModel.OnSnakeEatApple += AteApple;
             _gameView.OnViewDestroyed += OnViewDestroyed;
+        }
+
+        private void AteApple(Snake snake)
+        {
+            var snakeView = _snakeViewMap[snake];
+            var bodyPart = _snakeViewFactory.CreateBodyPart();
+            snakeView.AddBodyPart(bodyPart);
+            UpdateSnakePosition(snake);
         }
 
         private void SetupSnakes(List<SnakeSetup> snakeSetups)
@@ -112,6 +121,7 @@ namespace SnakeGame.Game.Presenters
         {
             _gameModel.OnUpdateSnakePositions -= UpdateAllSnakePositions;
             _gameModel.OnRemoveSnake -= RemoveSnake;
+            _gameModel.OnSnakeEatApple -= AteApple;
             _gameView.OnViewDestroyed -= OnViewDestroyed;
 
             _gameModel.Dispose();
