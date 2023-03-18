@@ -6,7 +6,7 @@ namespace SnakeGame.Board.Views
     {
         [SerializeField] private Transform _boardTransform;
 
-        public int BoardWidth
+        public float BoardWidth
         {
             set
             {
@@ -15,7 +15,7 @@ namespace SnakeGame.Board.Views
             }
         }
 
-        public int BoardHeight
+        public float BoardHeight
         {
             set
             {
@@ -24,7 +24,7 @@ namespace SnakeGame.Board.Views
             }
         }
 
-        public void OffsetPosition(int x, int y)
+        public void OffsetPosition(float x, float y)
         {
             var offset = new Vector3(x, y, 0);
             _boardTransform.position += offset;

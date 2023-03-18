@@ -13,7 +13,7 @@ namespace SnakeGame.Camera.Views
 
         public float CameraAspectRatio => _camera.aspect;
 
-        public void OffsetPosition(int x, int y)
+        public void OffsetPosition(float x, float y)
         {
             var offset = new Vector3(x, y, 0);
             _camera.transform.position += offset;

@@ -19,8 +19,8 @@ namespace SnakeGame.Board.Presenters
             _boardView.BoardWidth = _boardConfig.BoardWidth;
             _boardView.BoardHeight = _boardConfig.BoardHeight;
 
-            var boardOffsetX = _boardConfig.BoardWidth / 2;
-            var boardOffsetY = _boardConfig.BoardHeight / 2;
+            var boardOffsetX = _boardConfig.BoardWidth / 2f - 0.5f;
+            var boardOffsetY = _boardConfig.BoardHeight / 2f - 0.5f;
             _boardView.OffsetPosition(boardOffsetX, boardOffsetY);
         }
     }

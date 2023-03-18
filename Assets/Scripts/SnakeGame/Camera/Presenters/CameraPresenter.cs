@@ -1,5 +1,6 @@
 using SnakeGame.Board.Configs;
 using SnakeGame.Camera.Views;
+using UnityEngine.Device;
 
 namespace SnakeGame.Camera.Presenters
 {
@@ -16,7 +17,15 @@ namespace SnakeGame.Camera.Presenters
 
         public void Initialize()
         {
-            if (_boardConfig.BoardHeight > _boardConfig.BoardWidth)
+            var isScreenLandscape = Screen.width > Screen.height;
+
+            if (_boardConfig.BoardHeight == _boardConfig.BoardWidth)
+            {
+                _cameraView.CameraOrthographicSize = isScreenLandscape
+                    ? _boardConfig.BoardHeight * 0.5f
+                    : _boardConfig.BoardWidth / _cameraView.CameraAspectRatio * 0.5f;
+            }
+            else if (_boardConfig.BoardHeight > _boardConfig.BoardWidth)
             {
                 _cameraView.CameraOrthographicSize = _boardConfig.BoardHeight * 0.5f;
             }
@@ -25,8 +34,8 @@ namespace SnakeGame.Camera.Presenters
                 _cameraView.CameraOrthographicSize = _boardConfig.BoardWidth / _cameraView.CameraAspectRatio * 0.5f;
             }
 
-            var cameraOffsetX = _boardConfig.BoardWidth / 2;
-            var cameraOffsetY = _boardConfig.BoardHeight / 2;
+            var cameraOffsetX = _boardConfig.BoardWidth / 2f - 0.5f;
+            var cameraOffsetY = _boardConfig.BoardHeight / 2f - 0.5f;
             _cameraView.OffsetPosition(cameraOffsetX, cameraOffsetY);
         }
     }
